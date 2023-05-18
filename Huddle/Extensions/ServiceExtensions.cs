@@ -6,9 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Huddle.Domain.Repositories.ConsumerRepo;
+using Huddle.Domain.Repositories.UserRepos;
 using GoogleApi.Extensions;
 using Huddle.Application.GoogleMaps;
+using Huddle.Application.EmailService;
+using Huddle.Application.UserServices;
 
 namespace Huddle.Extensions
 {
@@ -69,6 +71,8 @@ namespace Huddle.Extensions
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGoogleMapsApiService, GoogleMapsApiService>();
+            services.AddScoped<ISendEmails, SendEmails>();
+            services.AddScoped<IUserServices, UserServices>();
         }
 
         public static void ConfigureGoogleMapsAPIs(this IServiceCollection services)

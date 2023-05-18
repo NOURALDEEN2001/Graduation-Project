@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Huddle.Domain.Repositories.ConsumerRepo
+namespace Huddle.Domain.Repositories.UserRepos
 {
     public class UserRepository : IUserRepository
     {
