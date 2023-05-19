@@ -67,12 +67,16 @@ namespace Huddle.Extensions
             services.AddControllersWithViews();
         }
 
-        public static void ConfigureAppServices(this IServiceCollection services)
+        public static void ConfigureAppServices(this IServiceCollection services, IConfiguration Configuration)
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGoogleMapsApiService, GoogleMapsApiService>();
             services.AddScoped<ISendEmails, SendEmails>();
             services.AddScoped<IUserServices, UserServices>();
+            var emailConfig = Configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
         }
 
         public static void ConfigureGoogleMapsAPIs(this IServiceCollection services)

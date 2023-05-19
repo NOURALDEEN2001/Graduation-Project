@@ -8,6 +8,6 @@ namespace Huddle.Application.EmailService
 {
     public interface ISendEmails
     {
-        public Task SendOTPEmail(string recipientEmail,string OTP);
+        public  Task SendEmail(Message message);
     }
 }

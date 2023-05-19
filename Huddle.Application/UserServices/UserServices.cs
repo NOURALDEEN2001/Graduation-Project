@@ -22,7 +22,10 @@ namespace Huddle.Application.UserServices
             int otpValue = random.Next(100000, 999999);
             string otp = otpValue.ToString("D6");
 
-            await _sendEmails.SendOTPEmail(recipientEmail,otp);
+            string subject = "Huddle Account Authentication";
+            string body = $"Here is your OTP verification code : {otp}, Please DO NOT SHARE IT.";
+            var message = new Message(new string[] { recipientEmail }, subject, body);
+            await _sendEmails.SendEmail(message);
             return new UserManagerResponse
             {
                 IsSuccess = true,

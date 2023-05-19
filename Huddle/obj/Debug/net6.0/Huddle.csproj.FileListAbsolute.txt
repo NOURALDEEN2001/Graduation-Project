@@ -92,3 +92,7 @@ C:\Users\Nouraldeen\Desktop\PSUT\4th year, snd sem\GP2\Huddle\Huddle\obj\Debug\n
 C:\Users\Nouraldeen\Desktop\PSUT\4th year, snd sem\GP2\Huddle\Huddle\obj\Debug\net6.0\ref\Huddle.dll
 C:\Users\Nouraldeen\Desktop\PSUT\4th year, snd sem\GP2\Huddle\Huddle\bin\Debug\net6.0\GoogleApi.dll
 C:\Users\Nouraldeen\Desktop\PSUT\4th year, snd sem\GP2\Huddle\Huddle\bin\Debug\net6.0\Microsoft.Extensions.Http.dll
+C:\Users\Nouraldeen\Desktop\PSUT\4th year, snd sem\GP2\Huddle\Huddle\bin\Debug\net6.0\MailKit.dll
+C:\Users\Nouraldeen\Desktop\PSUT\4th year, snd sem\GP2\Huddle\Huddle\bin\Debug\net6.0\MimeKit.dll
+C:\Users\Nouraldeen\Desktop\PSUT\4th year, snd sem\GP2\Huddle\Huddle\bin\Debug\net6.0\NETCore.MailKit.dll
+C:\Users\Nouraldeen\Desktop\PSUT\4th year, snd sem\GP2\Huddle\Huddle\bin\Debug\net6.0\BouncyCastle.Crypto.dll

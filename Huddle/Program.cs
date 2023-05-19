@@ -9,7 +9,7 @@ builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
 builder.Services.ConfigureAutoMapper();
-builder.Services.ConfigureAppServices();
+builder.Services.ConfigureAppServices(builder.Configuration);
 builder.Services.ConfigureGoogleMapsAPIs();
 builder.Services.AddControllers();
 
