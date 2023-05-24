@@ -96,3 +96,4 @@ C:\Users\Nouraldeen\Desktop\PSUT\4th year, snd sem\GP2\Huddle\Huddle\bin\Debug\n
 C:\Users\Nouraldeen\Desktop\PSUT\4th year, snd sem\GP2\Huddle\Huddle\bin\Debug\net6.0\MimeKit.dll
 C:\Users\Nouraldeen\Desktop\PSUT\4th year, snd sem\GP2\Huddle\Huddle\bin\Debug\net6.0\NETCore.MailKit.dll
 C:\Users\Nouraldeen\Desktop\PSUT\4th year, snd sem\GP2\Huddle\Huddle\bin\Debug\net6.0\BouncyCastle.Crypto.dll
+C:\Users\Nouraldeen\Desktop\PSUT\4th year, snd sem\GP2\Huddle\Huddle\bin\Debug\net6.0\Newtonsoft.Json.dll

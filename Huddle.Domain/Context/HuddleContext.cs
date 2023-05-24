@@ -52,10 +52,18 @@ namespace Huddle.Domain.Context
                 .OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<ConsumerActivity>()
                 .HasNoKey();
+            modelBuilder.Entity<ActivePlaceInGroup>()
+                .HasNoKey();
             modelBuilder.Entity<Activity>()
                 .HasMany(c => c.Consumers)
                 .WithMany(a => a.Activities)
                 .UsingEntity<ConsumerActivity>();
+            
+            modelBuilder.Entity<Group>()
+                .HasMany(m => m.Consumers)
+                .WithMany(c => c.Groups)
+                .UsingEntity<GroupConsumer>();
+         
 
         }
 
@@ -68,6 +76,11 @@ namespace Huddle.Domain.Context
         public DbSet<FollowedBusinessOwner> FollowedBusinessOwners { get; set; }
         public DbSet<FollowedEventPlanner> FollowedEventPlanners { get; set; }
         public DbSet<FollowedEvent> FollowedEvents { get; set; }
+        public DbSet<ConsumerActivity> ConsumerActivities { get; set; }
+        public DbSet<Activity> Activities { get; set; }
+        public DbSet<ActivePlaceInGroup> ActivePlacesInGroups { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<GroupConsumer> GroupConsumers { get; set; }
 
     }
 }

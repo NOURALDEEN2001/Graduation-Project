@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "hyOiiQPaBdNx1TKrrQuPgVWAn/9AVBnF2JG1rZN5dxsizedAMcRa04x4R+mGjlnTF3vEUqbFGzAyCPl0EleBQg==",
+  "dgSpecHash": "PNGv/aNFigepTfV9ZFxz2cJQI38hZ16RsDozKrmuQTUS3AQP34rk5a7strrYAjOc4OR6NWCzKUpigjGxyojSIg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Nouraldeen\\Desktop\\PSUT\\4th year, snd sem\\GP2\\Huddle\\Huddle.Application\\Huddle.Application.csproj",
   "expectedPackageFiles": [
@@ -54,6 +54,7 @@
     "C:\\Users\\Nouraldeen\\.nuget\\packages\\mimekit\\3.2.0\\mimekit.3.2.0.nupkg.sha512",
     "C:\\Users\\Nouraldeen\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\Nouraldeen\\.nuget\\packages\\netcore.mailkit\\2.1.0\\netcore.mailkit.2.1.0.nupkg.sha512",
+    "C:\\Users\\Nouraldeen\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\Nouraldeen\\.nuget\\packages\\portable.bouncycastle\\1.9.0\\portable.bouncycastle.1.9.0.nupkg.sha512",
     "C:\\Users\\Nouraldeen\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\Nouraldeen\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",

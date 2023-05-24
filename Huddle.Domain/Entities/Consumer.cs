@@ -13,6 +13,7 @@ namespace Huddle.Domain.Entities
         public string PreferredTimeTo { get; set; }
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<FollowedBusinessOwner> FollowedBusinessOwners { get; set; } = new List<FollowedBusinessOwner>();
+        public ICollection<Group> Groups { get; set; } = new List<Group>();
         public ICollection<Activity> Activities{ get; set; } = new List<Activity>();
 
     }

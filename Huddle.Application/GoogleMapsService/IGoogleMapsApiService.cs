@@ -9,5 +9,6 @@ namespace Huddle.Application.GoogleMaps
     public interface IGoogleMapsApiService
     {
         public Task GetPlaceBySearch(string place);
+        public Task<string> GetNearByBasedOnPerference(double latitude, double longitude, Guid userId);
     }
 }

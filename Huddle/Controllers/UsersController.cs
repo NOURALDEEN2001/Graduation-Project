@@ -66,6 +66,13 @@ namespace Huddle.Controllers
         }
 
         [HttpGet]
+        [Route("NearBy")]
+        public async Task<IActionResult> NearBy()
+        {
+            //_googleMapsApiService.GetNearByBasedOnPerference();
+            return Ok();
+        }
+        [HttpGet]
         [Route("GetName")]
         public IActionResult GetName()
         {

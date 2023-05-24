@@ -11,6 +11,8 @@ using GoogleApi.Extensions;
 using Huddle.Application.GoogleMaps;
 using Huddle.Application.EmailService;
 using Huddle.Application.UserServices;
+using Huddle.Domain.Repositories.HomeRepo;
+using Huddle.Domain.Repositories.GroupRepo;
 
 namespace Huddle.Extensions
 {
@@ -73,6 +75,8 @@ namespace Huddle.Extensions
             services.AddScoped<IGoogleMapsApiService, GoogleMapsApiService>();
             services.AddScoped<ISendEmails, SendEmails>();
             services.AddScoped<IUserServices, UserServices>();
+            services.AddScoped<IHomeRepository, HomeRepository>();
+            services.AddScoped<IGroupRepository, GroupRepository>();
             var emailConfig = Configuration
                 .GetSection("EmailConfiguration")
                 .Get<EmailConfiguration>();

@@ -22,6 +22,28 @@ namespace Huddle.Domain.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Huddle.Domain.Entities.ActivePlaceInGroup", b =>
+                {
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("HangOutDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PlaceId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasIndex("GroupId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ActivePlacesInGroups");
+                });
+
             modelBuilder.Entity("Huddle.Domain.Entities.Activity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -34,7 +56,7 @@ namespace Huddle.Domain.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Activity");
+                    b.ToTable("Activities");
                 });
 
             modelBuilder.Entity("Huddle.Domain.Entities.ConsumerActivity", b =>
@@ -49,7 +71,7 @@ namespace Huddle.Domain.Migrations
 
                     b.HasIndex("ConsumerId");
 
-                    b.ToTable("ConsumerActivity");
+                    b.ToTable("ConsumerActivities");
                 });
 
             modelBuilder.Entity("Huddle.Domain.Entities.Event", b =>
@@ -143,6 +165,53 @@ namespace Huddle.Domain.Migrations
                     b.HasIndex("EventPlannerId");
 
                     b.ToTable("FollowedEventPlanners");
+                });
+
+            modelBuilder.Entity("Huddle.Domain.Entities.Group", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GroupAdmin")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("HashNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HashNumber"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("Huddle.Domain.Entities.GroupConsumer", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<Guid>("ConsumerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConsumerId");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("GroupConsumers");
                 });
 
             modelBuilder.Entity("Huddle.Domain.Entities.Picture", b =>
@@ -480,6 +549,25 @@ namespace Huddle.Domain.Migrations
                     b.ToTable("businessOwners", (string)null);
                 });
 
+            modelBuilder.Entity("Huddle.Domain.Entities.ActivePlaceInGroup", b =>
+                {
+                    b.HasOne("Huddle.Domain.Entities.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Huddle.Domain.Entities.Consumer", "Consumer")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Consumer");
+
+                    b.Navigation("Group");
+                });
+
             modelBuilder.Entity("Huddle.Domain.Entities.ConsumerActivity", b =>
                 {
                     b.HasOne("Huddle.Domain.Entities.Activity", "Activity")
@@ -567,6 +655,25 @@ namespace Huddle.Domain.Migrations
                     b.Navigation("EventPlanner");
                 });
 
+            modelBuilder.Entity("Huddle.Domain.Entities.GroupConsumer", b =>
+                {
+                    b.HasOne("Huddle.Domain.Entities.Consumer", "Consumer")
+                        .WithMany()
+                        .HasForeignKey("ConsumerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Huddle.Domain.Entities.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Consumer");
+
+                    b.Navigation("Group");
+                });
+
             modelBuilder.Entity("Huddle.Domain.Entities.Picture", b =>
                 {
                     b.HasOne("Huddle.Domain.Entities.User", "User")
@@ -580,7 +687,7 @@ namespace Huddle.Domain.Migrations
 
             modelBuilder.Entity("Huddle.Domain.Entities.Review", b =>
                 {
-                    b.HasOne("Huddle.Domain.Entities.BusinessOwner", "BusinessOwner")
+                    b.HasOne("Huddle.Domain.Entities.BusinessOwner", "businessOwner")
                         .WithMany("Reviews")
                         .HasForeignKey("BusinessOwnerId")
                         .OnDelete(DeleteBehavior.NoAction);
@@ -600,7 +707,7 @@ namespace Huddle.Domain.Migrations
 
                     b.Navigation("Event");
 
-                    b.Navigation("BusinessOwner");
+                    b.Navigation("businessOwner");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

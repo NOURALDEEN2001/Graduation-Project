@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "KTF3rOPCShhOe3TAZoeKSde0zhAlGG4UhzK9V9EyGVhwBE+1lFhJoezBQ7G2DlhxykYYoM3nvYtBbSmBqFsIOw==",
+  "dgSpecHash": "GqigxnbK6dyHU95ia7IjcVwS4gOlrwpiNepRu+DNhxQtXAgSM1MDa9iMxy1b2JS6LqTA5Nss0Eqjrcrvdxe/wQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Nouraldeen\\Desktop\\PSUT\\4th year, snd sem\\GP2\\Huddle\\Shared\\Shared.csproj",
   "expectedPackageFiles": [
@@ -10,6 +10,7 @@
     "C:\\Users\\Nouraldeen\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\6.0.0\\microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\Nouraldeen\\.nuget\\packages\\microsoft.extensions.options\\6.0.0\\microsoft.extensions.options.6.0.0.nupkg.sha512",
     "C:\\Users\\Nouraldeen\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0\\microsoft.extensions.primitives.6.0.0.nupkg.sha512",
+    "C:\\Users\\Nouraldeen\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\Nouraldeen\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
   ],
   "logs": []
