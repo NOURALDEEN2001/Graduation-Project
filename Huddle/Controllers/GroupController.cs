@@ -1,7 +1,8 @@
-﻿using Huddle.Domain.Repositories.GroupRepo;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using Newtonsoft.Json;
+using Repositories.GroupRepo;
+using Huddle.Domain;
 namespace Huddle.Controllers
 {
     [Route("api/Groups")]
@@ -30,7 +31,7 @@ namespace Huddle.Controllers
 
         [HttpPost]
         [Route("CreateGroup")]
-        public async Task<IActionResult> CreateGroup(Guid userId, string GroupName) 
+        public async Task<IActionResult> CreateGroup(Guid userId, string GroupName)
         {
             var response = await _groupRepository.CreateGroup(userId, GroupName);
             if (response.IsSuccess)
@@ -40,9 +41,10 @@ namespace Huddle.Controllers
             return BadRequest(response);
         }
 
+
         [HttpPost]
         [Route("AddConsumerToGroup")]
-        public async Task<IActionResult> AddConsumerToGroup([FromBody]Guid userId, int hashNum)
+        public async Task<IActionResult> AddConsumerToGroup(Guid userId, long hashNum)
         {
             var response = await _groupRepository.AddConsumerToGroup(userId, hashNum);
             if(response.IsSuccess)

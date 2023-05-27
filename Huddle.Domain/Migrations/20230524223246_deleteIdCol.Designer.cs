@@ -4,6 +4,7 @@ using Huddle.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Huddle.Domain.Migrations
 {
     [DbContext(typeof(HuddleContext))]
-    partial class HuddleContextModelSnapshot : ModelSnapshot
+    [Migration("20230524223246_deleteIdCol")]
+    partial class deleteIdCol
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -193,15 +196,15 @@ namespace Huddle.Domain.Migrations
 
             modelBuilder.Entity("Huddle.Domain.Entities.GroupConsumer", b =>
                 {
-                    b.Property<Guid>("GroupId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("ConsumerId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("GroupId", "ConsumerId");
+                    b.Property<Guid>("GroupId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasIndex("ConsumerId");
+                    b.HasKey("ConsumerId", "GroupId");
+
+                    b.HasIndex("GroupId");
 
                     b.ToTable("GroupConsumers");
                 });

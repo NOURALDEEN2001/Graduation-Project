@@ -63,6 +63,8 @@ namespace Huddle.Domain.Context
                 .HasMany(m => m.Consumers)
                 .WithMany(c => c.Groups)
                 .UsingEntity<GroupConsumer>();
+            modelBuilder.Entity<GroupConsumer>()
+                .HasKey(c => new { c.GroupId, c.ConsumerId });
          
 
         }

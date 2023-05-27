@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Huddle.Domain.Entities;
-using Shared.RegistrationDTOs;
+using Huddle.Domain.RegistrationDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

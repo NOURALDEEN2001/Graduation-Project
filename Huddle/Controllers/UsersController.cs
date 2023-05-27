@@ -1,9 +1,9 @@
 ﻿using Huddle.Application.GoogleMaps;
 using Huddle.Application.UserServices;
-using Huddle.Domain.Repositories.UserRepos;
+using Huddle.Domain.RegistrationDTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Shared.RegistrationDTOs;
+using Repositories.UserRepo;
 
 namespace Huddle.Controllers
 {

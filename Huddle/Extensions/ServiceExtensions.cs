@@ -6,13 +6,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Huddle.Domain.Repositories.UserRepos;
 using GoogleApi.Extensions;
 using Huddle.Application.GoogleMaps;
 using Huddle.Application.EmailService;
 using Huddle.Application.UserServices;
-using Huddle.Domain.Repositories.HomeRepo;
-using Huddle.Domain.Repositories.GroupRepo;
+using Repositories.UserRepo;
+using Repositories.HomeRepo;
+using Repositories.GroupRepo;
 
 namespace Huddle.Extensions
 {

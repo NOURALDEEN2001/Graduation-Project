@@ -16,7 +16,7 @@ namespace Huddle.Application.UserServices
             _sendEmails = sendEmails;
         }
 
-        public async Task<UserManagerResponse> AuthenticateUser(string recipientEmail)
+        public async Task<UserManagerResponse<string>> AuthenticateUser(string recipientEmail)
         {
             Random random = new Random();
             int otpValue = random.Next(100000, 999999);
@@ -26,7 +26,7 @@ namespace Huddle.Application.UserServices
             string body = $"Here is your OTP verification code : {otp}, Please DO NOT SHARE IT.";
             var message = new Message(new string[] { recipientEmail }, subject, body);
             await _sendEmails.SendEmail(message);
-            return new UserManagerResponse
+            return new UserManagerResponse<string>
             {
                 IsSuccess = true,
                 Message = otp

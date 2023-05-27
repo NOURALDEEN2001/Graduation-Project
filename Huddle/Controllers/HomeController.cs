@@ -1,8 +1,8 @@
 ﻿using Huddle.Application.GoogleMaps;
 using Huddle.Domain.Entities;
-using Huddle.Domain.Repositories.HomeRepo;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Repositories.HomeRepo;
 using Shared.HomeDTOs;
 using System.Text.Json;
 
