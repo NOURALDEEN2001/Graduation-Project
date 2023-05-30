@@ -111,3 +111,4 @@ Repositories/Repositories.csproj
 Shared/Shared.csproj
 Huddle.Domain/Huddle.Domain.csproj
 Huddle.Application/Huddle.Application.csproj
+Huddle/bin/Debug/net6.0/GoogleApi.dll

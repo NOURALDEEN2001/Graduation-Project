@@ -1,4 +1,6 @@
-﻿using Shared;
+﻿using GoogleApi.Entities.Places.Details.Response;
+using Newtonsoft.Json.Linq;
+using Shared;
 using Shared.GoogleDTOs;
 using System;
 using System.Collections.Generic;
@@ -12,6 +14,6 @@ namespace Huddle.Application.GoogleMaps
     {
         public Task GetPlaceBySearch(string place);
         public Task<string> GetNearByBasedOnPerference(double latitude, double longitude, Guid userId);
-        public Task<UserManagerResponse<PlaceCardDTO>> GetPlaceDetails(string placeId);
+        public Task<UserManagerResponse<string>> GetPlaceDetails(string placeId);
     }
 }

@@ -10,11 +10,8 @@ namespace Shared
     {
         public string Message { get; set; }
         public bool IsSuccess { get; set; }
-        public List<T> Obj { get; set; }  
+        public List<T> Obj { get; set; }  = new List<T>();
         public IEnumerable<string> Errors { get; set; }
-        public UserManagerResponse()
-        {
-            Obj = default(List<T>);
-        }
+      
     }
 }

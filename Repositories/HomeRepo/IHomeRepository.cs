@@ -1,5 +1,6 @@
 ﻿using Huddle.Domain.Entities;
 using Shared;
+using Shared.GroupDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,6 @@ namespace Repositories.HomeRepo
     public interface IHomeRepository
     {
         public List<string> GetUserPreferences(Guid userId);
-        public Task<UserManagerResponse<string>> AddPlaceToGroup(ActivePlaceInGroup activePlaceInGroup);
+        public Task<UserManagerResponse<string>> AddPlaceToGroup(ActivePlacceInGroupDTO activePlaceInGroup);
     }
 }

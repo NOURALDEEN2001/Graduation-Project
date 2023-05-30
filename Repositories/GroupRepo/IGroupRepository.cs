@@ -1,5 +1,6 @@
 ﻿using Huddle.Domain.Entities;
 using Shared;
+using Shared.Profiles.GroupProfiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;

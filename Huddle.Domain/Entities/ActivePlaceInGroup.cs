@@ -1,6 +1,7 @@
 ﻿using GoogleApi.Entities.Places.Search.NearBy.Response;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace Huddle.Domain.Entities
 {
     public class ActivePlaceInGroup
     {
+
         public Guid UserId { get; set; }
         [ForeignKey("UserId")]
         public Consumer Consumer { get; set; }

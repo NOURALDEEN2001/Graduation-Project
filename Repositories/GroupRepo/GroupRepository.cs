@@ -123,7 +123,15 @@ namespace Repositories.GroupRepo
                 };
             try
             {
-                var response =  _context.Consumers.FromSql($"SELECT * FROM Consumers WHERE Id IN (SELECT ConsumerId FROM GroupConsumers WHERE GroupId = {groupId})");
+                var consumerIds = _context.GroupConsumers
+                    .Where(gc => gc.GroupId == groupId)
+                    .Select(gc => gc.ConsumerId)
+                    .ToList();
+
+                var response =  _context.Consumers
+                    .Where(c => consumerIds.Contains(c.Id))
+                    .ToList();
+
                 if (response == null)
                 {
                     return new UserManagerResponse<Consumer>
@@ -186,6 +194,5 @@ namespace Repositories.GroupRepo
                 };
             }
         }
-
     }
 }

@@ -1,4 +1,6 @@
-﻿using Shared;
+﻿using GoogleApi.Entities.Places.Details.Response;
+using Shared;
+using Shared.GoogleDTOs;
 using Shared.GroupDTOs;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,6 @@ namespace Huddle.Application.GroupServices
 {
     public interface IGroupServices
     {
-        public Task<UserManagerResponse<GroupDetails>> GetGroupDetails(Guid groupId);
+        public Task<UserManagerResponse<GroupDetailsDTO>> GetGroupDetails(Guid groupId);
     }
 }

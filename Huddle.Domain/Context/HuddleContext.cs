@@ -17,6 +17,7 @@ namespace Huddle.Domain.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+           
 
             modelBuilder.Entity<User>(b =>
             {
@@ -58,13 +59,14 @@ namespace Huddle.Domain.Context
                 .HasMany(c => c.Consumers)
                 .WithMany(a => a.Activities)
                 .UsingEntity<ConsumerActivity>();
-            
             modelBuilder.Entity<Group>()
                 .HasMany(m => m.Consumers)
                 .WithMany(c => c.Groups)
                 .UsingEntity<GroupConsumer>();
             modelBuilder.Entity<GroupConsumer>()
                 .HasKey(c => new { c.GroupId, c.ConsumerId });
+            modelBuilder.Entity<ActivePlaceInGroup>()
+                .HasKey(a=> new {a.GroupId, a.PlaceId});
          
 
         }

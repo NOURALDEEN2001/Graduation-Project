@@ -1,4 +1,6 @@
-﻿using Huddle.Domain.Entities;
+﻿using GoogleApi.Entities.Places.Details.Response;
+using Huddle.Domain.Entities;
+using Newtonsoft.Json.Linq;
 using Shared.GoogleDTOs;
 using System;
 using System.Collections.Generic;
@@ -8,9 +10,11 @@ using System.Threading.Tasks;
 
 namespace Shared.GroupDTOs
 {
-    public class GroupDetails
+    public class GroupDetailsDTO
     {
-        public List<UserInfo> UserInfos { get; set; }
-        public List<PlaceCardDTO> ActivePlaces { get; set; }
+        public List<UserInfo> UserInfos { get; set; } = new List<UserInfo>();
+        //public List<DetailsResult> ActivePlaces { get; set; } = new List<DetailsResult>();
+        public List<string> ActivePlaces { get; set; } = new List<string>();
+
     }
 }

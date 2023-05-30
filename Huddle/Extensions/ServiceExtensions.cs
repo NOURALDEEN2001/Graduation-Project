@@ -2,7 +2,6 @@
 using Huddle.Domain.Context;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +12,7 @@ using Huddle.Application.UserServices;
 using Repositories.UserRepo;
 using Repositories.HomeRepo;
 using Repositories.GroupRepo;
+using Huddle.Application.GroupServices;
 
 namespace Huddle.Extensions
 {
@@ -77,6 +77,7 @@ namespace Huddle.Extensions
             services.AddScoped<IUserServices, UserServices>();
             services.AddScoped<IHomeRepository, HomeRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IGroupServices,GroupServices>();
             var emailConfig = Configuration
                 .GetSection("EmailConfiguration")
                 .Get<EmailConfiguration>();

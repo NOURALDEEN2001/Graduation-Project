@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Repositories.GroupRepo;
 using Huddle.Domain;
+using Huddle.Application.GroupServices;
+using Huddle.Domain.Entities;
+
 namespace Huddle.Controllers
 {
     [Route("api/Groups")]
@@ -10,9 +13,11 @@ namespace Huddle.Controllers
     public class GroupController : ControllerBase
     {
         private readonly IGroupRepository _groupRepository;
-        public GroupController(IGroupRepository groupRepository)
+        private readonly IGroupServices _groupServices;
+        public GroupController(IGroupRepository groupRepository,IGroupServices groupServices)
         {
             _groupRepository = groupRepository;
+            _groupServices = groupServices;
         }
 
         [HttpPost]
@@ -51,5 +56,20 @@ namespace Huddle.Controllers
                 return Ok(response);
             return BadRequest(response);
         }
-    }
+
+        [HttpPost]
+        [Route("GetGroupDetails")]
+        public async Task<IActionResult> GetGroupDetails(Guid groupId)
+        {
+            var response = await _groupServices.GetGroupDetails(groupId);
+            if (response.IsSuccess)
+            {
+                return Ok(response.Obj);
+            }
+            else
+                return BadRequest(response.Message);
+        }
+
+        
+    } 
 }

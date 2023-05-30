@@ -3,6 +3,7 @@ using Huddle.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Repositories.HomeRepo;
+using Shared.GroupDTOs;
 using Shared.HomeDTOs;
 using System.Text.Json;
 
@@ -33,17 +34,16 @@ namespace Huddle.Controllers
         }
 
         [HttpPost]
-        [Route("AddPlace")]
-        public async Task<IActionResult> AddPlaceToGroup(ActivePlaceInGroup activePlaceInGroup)
+        [Route("AddPlaceToGroup")]
+        public async Task<IActionResult> AddPlaceToGroup(ActivePlacceInGroupDTO activePlaceInGroup)
         {
-            if(activePlaceInGroup != null)
+            var response = await _homeRepository.AddPlaceToGroup(activePlaceInGroup);
+            if (response.IsSuccess)
             {
-                var response = await _homeRepository.AddPlaceToGroup(activePlaceInGroup);
-                if(response.IsSuccess)
-                    return Ok(response);
+                return Ok(response.Message);
             }
-            return BadRequest("Model is null");    
-                
+            return BadRequest(response.Message);
+
         }
 
         

@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using GoogleApi;
 using GoogleApi.Entities.Common;
+using GoogleApi.Entities.Places.Details.Response;
 using GoogleApi.Entities.Places.Search.NearBy.Response;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Repositories.HomeRepo;
 using Shared;
 using Shared.GoogleDTOs;
@@ -25,6 +28,7 @@ namespace Huddle.Application.GoogleMaps
         private GooglePlaces.DetailsApi _detailsApi;
         private readonly IHomeRepository _homeRepository;
         private readonly IMapper _mapper;
+        private static readonly HttpClient _httpClient = new HttpClient();
         public GoogleMapsApiService(GooglePlaces.Search.TextSearchApi textSearchApi,GooglePlaces.Search.NearBySearchApi nearBySearchApi,
                                     IHomeRepository homeRepository, GooglePlaces.DetailsApi detailsApi,
                                     IMapper mapper)
@@ -56,7 +60,7 @@ namespace Huddle.Application.GoogleMaps
                 {
                     Key = "AIzaSyDCZ1dUovZcLYLZvrGIQc7XBCG8ZKxxSK4",
                     Location = new Coordinate(latitude, longitude),
-                    Radius = 30000,
+                    Radius = 5000,
                     Name = Userpreferences[i]
                 });
 
@@ -67,31 +71,64 @@ namespace Huddle.Application.GoogleMaps
            return JsonPlaces;
         }
 
-        public async Task<UserManagerResponse<PlaceCardDTO>> GetPlaceDetails(string placeId)
+        public async Task<UserManagerResponse<string>> GetPlaceDetails(string placeId)
         {
+            //try
+            //{
+            //    var response = await _detailsApi.QueryAsync(new GoogleApi.Entities.Places.Details.Request.PlacesDetailsRequest
+            //    {
+            //        PlaceId = placeId,
+            //        Key = "AIzaSyDCZ1dUovZcLYLZvrGIQc7XBCG8ZKxxSK4"
+            //    });
+            //    if (response == null) return new UserManagerResponse<DetailsResult>
+            //    {
+            //        IsSuccess = false,
+            //        Message = "null response from google APIs"
+            //    };
+            //    //var mapedResponse = _mapper.Map<DetailsResult>(response.Result);
+            //    var userManagerResponse = new UserManagerResponse<DetailsResult>();
+            //    userManagerResponse.IsSuccess = true;
+            //    userManagerResponse.Message = "success";
+            //    userManagerResponse.Obj.Add(response.Result);
+            //    return userManagerResponse;
+            //}
+            //catch (Exception ex)
+            //{
+            //    return new UserManagerResponse<DetailsResult> { IsSuccess = false, Message = ex.Message };
+            //}
+            //var apiKey = "AIzaSyDCZ1dUovZcLYLZvrGIQc7XBCG8ZKxxSK4";
+            //string url = $"https://maps.googleapis.com/maps/api/place/details/json?placeid={placeId}&key={apiKey}";
             try
             {
-                var response = await _detailsApi.QueryAsync(new GoogleApi.Entities.Places.Details.Request.PlacesDetailsRequest
+                string URL = $"https://maps.googleapis.com/maps/api/place/details/json?place_id={placeId}&key=AIzaSyDCZ1dUovZcLYLZvrGIQc7XBCG8ZKxxSK4";
+                HttpResponseMessage response = await _httpClient.GetAsync(URL);
+                response.EnsureSuccessStatusCode();
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                dynamic jsonObject = JsonConvert.DeserializeObject(responseBody);
+
+                string readableString = JsonConvert.SerializeObject(jsonObject);
+
+                var userManagerResponse = new UserManagerResponse<string>
                 {
-                    PlaceId = placeId,
-                });
-                if (response == null) return new UserManagerResponse<PlaceCardDTO>
-                {
-                    IsSuccess = false,
-                    Message = "null response from google APIs"
+                    IsSuccess = true,
+                    Message = "success",
                 };
-                var mapedResponse = _mapper.Map<PlaceCardDTO>(response.Result);
-                var userManagerResponse = new UserManagerResponse<PlaceCardDTO>();
-                userManagerResponse.IsSuccess = true;
-                userManagerResponse.Message = "success";
-                userManagerResponse.Obj[0] = mapedResponse;
+                userManagerResponse.Obj.Add(readableString);
                 return userManagerResponse;
             }
             catch (Exception ex)
             {
-                return new UserManagerResponse<PlaceCardDTO> { IsSuccess = false, Message = ex.Message };
+
+                return new UserManagerResponse<string>
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
             }
            
         }
     }
 }
+

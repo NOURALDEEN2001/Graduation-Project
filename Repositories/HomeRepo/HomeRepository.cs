@@ -1,6 +1,8 @@
-﻿using Huddle.Domain.Context;
+﻿using AutoMapper;
+using Huddle.Domain.Context;
 using Huddle.Domain.Entities;
 using Shared;
+using Shared.GroupDTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +14,11 @@ namespace Repositories.HomeRepo
     public class HomeRepository : IHomeRepository
     {
         private readonly HuddleContext _context;
-        public HomeRepository(HuddleContext context)
+        private readonly IMapper _mapper;
+        public HomeRepository(HuddleContext context,IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public List<string> GetUserPreferences(Guid userId)
@@ -31,23 +35,49 @@ namespace Repositories.HomeRepo
             return preferences;
         }
 
-        public async Task<UserManagerResponse<string>> AddPlaceToGroup(ActivePlaceInGroup activePlaceInGroup)
+        public async Task<UserManagerResponse<string>> AddPlaceToGroup(ActivePlacceInGroupDTO activePlaceInGroup)
         {
-            var responce = await _context.ActivePlacesInGroups.AddAsync(activePlaceInGroup);
-            if (responce != null)
+            if (activePlaceInGroup == null)
+                return new UserManagerResponse<string>
+                {
+                    IsSuccess = false,
+                    Message = "data is null"
+                };
+            try
             {
+                //var mapedActivePlaceInGroup = _mapper.Map<ActivePlaceInGroup>(activePlaceInGroup);
+                var mapedActivePlaceInGroup = new ActivePlaceInGroup
+                {
+                    GroupId = activePlaceInGroup.GroupId,
+                    UserId = activePlaceInGroup.UserId,
+                    PlaceId = activePlaceInGroup.PlaceId,
+                    HangOutDate = activePlaceInGroup.HangOutDate,
+                };
+                var response = await _context.ActivePlacesInGroups.AddAsync(mapedActivePlaceInGroup);
+                if (response == null)
+                {
+                    return new UserManagerResponse<string>
+                    {
+                        IsSuccess = false,
+                        Message = "failed To add to data base"
+                    };
+                }
                 await _context.SaveChangesAsync();
                 return new UserManagerResponse<string>
                 {
-                    Message = "Place added successfully",
                     IsSuccess = true,
+                    Message = "Added Successfully"
                 };
             }
-            return new UserManagerResponse<string>
+            catch (Exception ex)
             {
-                IsSuccess = false,
-                Message = "Error when adding A place to a grouop"
-            };
+
+                return new UserManagerResponse<string>
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
         }
     }
 }

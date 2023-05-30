@@ -1,4 +1,5 @@
 ﻿using Azure;
+using GoogleApi.Entities.Places.Details.Response;
 using Huddle.Application.GoogleMaps;
 using Huddle.Domain.Entities;
 using Newtonsoft.Json;
@@ -23,42 +24,52 @@ namespace Huddle.Application.GroupServices
             _googleMapsApiService = googleMapsApiService;
         }
 
-        public async Task<UserManagerResponse<GroupDetails>> GetGroupDetails(Guid groupId)
+        public async Task<UserManagerResponse<GroupDetailsDTO>> GetGroupDetails(Guid groupId)
         {
-            var groupMembers = await _groupRepository.GetGroupMembers(groupId);
-            var activePlaces = await _groupRepository.GetActivePlaces(groupId);
-            GroupDetails groupDetails = new GroupDetails();
-            if (groupMembers.IsSuccess && activePlaces.IsSuccess)
+            try
             {
-                foreach(var consumer in groupMembers.Obj)
+                var groupMembers = await _groupRepository.GetGroupMembers(groupId);
+                var activePlaces = await _groupRepository.GetActivePlaces(groupId);
+                GroupDetailsDTO groupDetails = new GroupDetailsDTO();
+                if (groupMembers.IsSuccess && activePlaces.IsSuccess)
                 {
-                    groupDetails.UserInfos.Add(new UserInfo
+                    foreach (var consumer in groupMembers.Obj)
                     {
-                        Fname = consumer.Fname,
-                        Label = (consumer.Fname[0] + consumer.Lname[0]).ToString()
-                    });
-                }
-
-                foreach(var place in activePlaces.Obj)
-                {
-                    var placeDetails = await _googleMapsApiService.GetPlaceDetails(place.PlaceId);
-                    if (placeDetails.IsSuccess)
-                    {
-                        groupDetails.ActivePlaces.Add(placeDetails.Obj[0]);
+                        groupDetails.UserInfos.Add(new UserInfo
+                        {
+                            Fname = consumer.Fname,
+                            Label = (consumer.Fname[0] + consumer.Lname[0]).ToString()
+                        });
                     }
-                }
-                var userManagerResponse = new UserManagerResponse<GroupDetails>();
-                userManagerResponse.IsSuccess = true;
-                userManagerResponse.Message = "Success";
-                userManagerResponse.Obj[0] = groupDetails;
-                return userManagerResponse;
-            }
-            return new UserManagerResponse<GroupDetails>
-            {
-                IsSuccess = false,
-                Message = "Faild",
 
-            };
+                    foreach (var place in activePlaces.Obj)
+                    {
+                        var placeDetails = await _googleMapsApiService.GetPlaceDetails(place.PlaceId);
+                        if (placeDetails.IsSuccess)
+                        {
+                            groupDetails.ActivePlaces.Add(placeDetails.Obj[0]);
+                        }
+                    }
+                    var userManagerResponse = new UserManagerResponse<GroupDetailsDTO>();
+                    userManagerResponse.IsSuccess = true;
+                    userManagerResponse.Message = "Success";
+                    userManagerResponse.Obj.Add(groupDetails);
+                    return userManagerResponse;
+                }
+                return new UserManagerResponse<GroupDetailsDTO>
+                {
+                    IsSuccess = false,
+                    Message = "Faild",
+
+                };
+
+            }
+            catch (Exception ex)
+            {
+
+                return new UserManagerResponse<GroupDetailsDTO> { IsSuccess = false, Message = ex.Message };
+            }
+           
         }
     }
 }
