@@ -15,5 +15,6 @@ namespace Huddle.Application.GoogleMaps
         public Task GetPlaceBySearch(string place);
         public Task<string> GetNearByBasedOnPerference(double latitude, double longitude, Guid userId);
         public Task<UserManagerResponse<string>> GetPlaceDetails(string placeId);
+        public Task<UserManagerResponse<string>> FindPlace(string placeToSearch);
     }
 }

@@ -2,6 +2,7 @@
 using GoogleApi;
 using GoogleApi.Entities.Common;
 using GoogleApi.Entities.Places.Details.Response;
+using GoogleApi.Entities.Places.Search.Find.Request.Enums;
 using GoogleApi.Entities.Places.Search.NearBy.Response;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Newtonsoft.Json;
@@ -25,19 +26,21 @@ namespace Huddle.Application.GoogleMaps
     {
         private GooglePlaces.Search.TextSearchApi _textSearchApi;
         private GooglePlaces.Search.NearBySearchApi _nearBySearchApi;
+        private GooglePlaces.Search.FindSearchApi _findSearchApi;
         private GooglePlaces.DetailsApi _detailsApi;
         private readonly IHomeRepository _homeRepository;
         private readonly IMapper _mapper;
         private static readonly HttpClient _httpClient = new HttpClient();
         public GoogleMapsApiService(GooglePlaces.Search.TextSearchApi textSearchApi,GooglePlaces.Search.NearBySearchApi nearBySearchApi,
                                     IHomeRepository homeRepository, GooglePlaces.DetailsApi detailsApi,
-                                    IMapper mapper)
+                                    IMapper mapper, GooglePlaces.Search.FindSearchApi findSearchApi)
         {
             _textSearchApi = textSearchApi;
             _nearBySearchApi = nearBySearchApi;
             _homeRepository = homeRepository;
             _detailsApi = detailsApi;
             _mapper = mapper;
+            _findSearchApi = findSearchApi;
         }
 
         public async Task GetPlaceBySearch(string place)
@@ -129,6 +132,42 @@ namespace Huddle.Application.GoogleMaps
             }
            
         }
+
+        public async Task<UserManagerResponse<string>> FindPlace(string placeToSearch)
+        {
+            try
+            {
+                if (placeToSearch == null)
+                    return new UserManagerResponse<string>
+                    {
+                        IsSuccess = false,
+                        Message = "The requested place is null"
+                    };
+                var response = _findSearchApi.QueryAsync(new GoogleApi.Entities.Places.Search.Find.Request.PlacesFindSearchRequest
+                {
+                    Key = "AIzaSyDCZ1dUovZcLYLZvrGIQc7XBCG8ZKxxSK4",
+                    Input = placeToSearch,
+                    Type = InputType.TextQuery
+                });
+                var jsonPlace = JsonConvert.SerializeObject(response.Result);
+                return new UserManagerResponse<string>
+                {
+                    IsSuccess = true,
+                    Message = jsonPlace,
+                };
+            }
+            catch (Exception ex)
+            {
+
+                return new UserManagerResponse<string>
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+           
+        }
+
     }
 }
 

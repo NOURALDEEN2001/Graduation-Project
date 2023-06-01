@@ -5,6 +5,7 @@ using Repositories.GroupRepo;
 using Huddle.Domain;
 using Huddle.Application.GroupServices;
 using Huddle.Domain.Entities;
+using Huddle.Application.GoogleMaps;
 
 namespace Huddle.Controllers
 {
@@ -14,10 +15,13 @@ namespace Huddle.Controllers
     {
         private readonly IGroupRepository _groupRepository;
         private readonly IGroupServices _groupServices;
-        public GroupController(IGroupRepository groupRepository,IGroupServices groupServices)
+        private readonly IGoogleMapsApiService _googleMapsApiService;
+        public GroupController(IGroupRepository groupRepository,IGroupServices groupServices,
+                               IGoogleMapsApiService googleMapsApiService)
         {
             _groupRepository = groupRepository;
             _groupServices = groupServices;
+            _googleMapsApiService = googleMapsApiService;
         }
 
         [HttpPost]
@@ -66,10 +70,19 @@ namespace Huddle.Controllers
             {
                 return Ok(response.Obj);
             }
-            else
-                return BadRequest(response.Message);
+            return BadRequest(response.Message);
         }
 
-        
+        [HttpPost]
+        [Route("FindPlace")]
+        public async Task<IActionResult> FindPlace(string placeToFind)
+        {
+            var response = await _googleMapsApiService.FindPlace(placeToFind);
+            if (response.IsSuccess)
+            {
+                return Ok(response.Message);
+            }
+            return BadRequest(response.Message);
+        }
     } 
 }
