@@ -47,7 +47,7 @@ namespace Huddle.Application.GoogleMaps
         {
             var response = await _textSearchApi.QueryAsync(new GoogleApi.Entities.Places.Search.Text.Request.PlacesTextSearchRequest
             {
-                Query = place,
+                Query = "الموصلي",
                 Key = "AIzaSyDCZ1dUovZcLYLZvrGIQc7XBCG8ZKxxSK4"
             });
 
@@ -143,13 +143,12 @@ namespace Huddle.Application.GoogleMaps
                         IsSuccess = false,
                         Message = "The requested place is null"
                     };
-                var response = _findSearchApi.QueryAsync(new GoogleApi.Entities.Places.Search.Find.Request.PlacesFindSearchRequest
+                var response = await _textSearchApi.QueryAsync(new GoogleApi.Entities.Places.Search.Text.Request.PlacesTextSearchRequest
                 {
-                    Key = "AIzaSyDCZ1dUovZcLYLZvrGIQc7XBCG8ZKxxSK4",
-                    Input = placeToSearch,
-                    Type = InputType.TextQuery
+                    Query = placeToSearch,
+                    Key = "AIzaSyDCZ1dUovZcLYLZvrGIQc7XBCG8ZKxxSK4"
                 });
-                var jsonPlace = JsonConvert.SerializeObject(response.Result);
+                var jsonPlace = JsonConvert.SerializeObject(response.Results);
                 return new UserManagerResponse<string>
                 {
                     IsSuccess = true,
