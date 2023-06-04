@@ -23,34 +23,80 @@ namespace Huddle.Application.GroupServices
             _groupRepository = groupRepository;
             _googleMapsApiService = googleMapsApiService;
         }
-
-        public async Task<UserManagerResponse<GroupDetailsDTO>> GetGroupDetails(Guid groupId)
+        
+       
+        public async Task<UserManagerResponse<GroupDetailsDTO>> GetGroupDetails(Guid groupId,Guid consumerId)
         {
             try
             {
                 var groupMembers = await _groupRepository.GetGroupMembers(groupId);
                 var activePlaces = await _groupRepository.GetActivePlaces(groupId);
                 GroupDetailsDTO groupDetails = new GroupDetailsDTO();
+                var userManagerResponse = new UserManagerResponse<GroupDetailsDTO>();
+
+
                 if (groupMembers.IsSuccess && activePlaces.IsSuccess)
                 {
                     foreach (var consumer in groupMembers.Obj)
                     {
+                        var isConfirmedConsumer = await _groupRepository.GetIfConfirmed(groupId, consumer.Id);
+                        bool? isConfirmedConsumerResult;
+                        if(isConfirmedConsumer.IsSuccess)
+                            isConfirmedConsumerResult = isConfirmedConsumer.Obj[0].IsConfirmed;
+                        else
+                            isConfirmedConsumerResult = null;
+
                         groupDetails.UserInfos.Add(new UserInfo
                         {
+                            UserId = consumer.Id,
                             Fname = consumer.Fname,
-                            Label = (consumer.Fname[0] + consumer.Lname[0]).ToString()
+                            Label = (consumer.Fname[0].ToString() + consumer.Lname[0].ToString().ToString()),
+                            IsConfirmed = isConfirmedConsumerResult,
                         });
                     }
 
                     foreach (var place in activePlaces.Obj)
                     {
                         var placeDetails = await _googleMapsApiService.GetPlaceDetails(place.PlaceId);
-                        if (placeDetails.IsSuccess)
+                        var inCount = await _groupRepository.GetContributionCount(groupId, place.PlaceId, 1);
+                        var outCount = await _groupRepository.GetContributionCount(groupId, place.PlaceId, 0);
+                        var isIn = await _groupRepository.CheckIsIn(groupId, place.PlaceId, consumerId);
+                        PlaceInGroupDetails placeInGroupDetails = new PlaceInGroupDetails();
+                        if (!placeDetails.IsSuccess)
                         {
-                            groupDetails.ActivePlaces.Add(placeDetails.Obj[0]);
+                            placeInGroupDetails.PlaceDetails = placeDetails.Message;
+                            userManagerResponse.Errors.Add(placeDetails.Message);
                         }
+                        else placeInGroupDetails.PlaceDetails = placeDetails.Obj[0];
+                        if (!inCount.IsSuccess)
+                        {
+                            placeInGroupDetails.InCount = null;
+                            userManagerResponse.Errors.Add(inCount.Message);
+                        }
+                        else placeInGroupDetails.InCount = inCount.Obj[0];
+                        if (!outCount.IsSuccess)
+                        {
+                            placeInGroupDetails.OutCount = null;
+                            userManagerResponse.Errors.Add(outCount.Message);
+                        }
+                        else placeInGroupDetails.OutCount = outCount.Obj[0];
+                        if (!isIn.IsSuccess)
+                        {
+                            placeInGroupDetails.IsIn = null;
+                            userManagerResponse.Errors.Add(isIn.Message);
+                        }
+                        else placeInGroupDetails.IsIn = isIn.Obj[0];
+
+                        groupDetails.ActivePlaces.Add(placeInGroupDetails);
                     }
-                    var userManagerResponse = new UserManagerResponse<GroupDetailsDTO>();
+
+                    var isConfirmedRequester = await _groupRepository.GetIfConfirmed(groupId, consumerId);
+                    if(isConfirmedRequester.IsSuccess)
+                        groupDetails.RequesterIsConfirmed = isConfirmedRequester.Obj[0].IsConfirmed;
+                    else
+                        groupDetails.RequesterIsConfirmed = null;
+                    
+                    
                     userManagerResponse.IsSuccess = true;
                     userManagerResponse.Message = "Success";
                     userManagerResponse.Obj.Add(groupDetails);
@@ -59,8 +105,7 @@ namespace Huddle.Application.GroupServices
                 return new UserManagerResponse<GroupDetailsDTO>
                 {
                     IsSuccess = false,
-                    Message = "Faild",
-
+                    Message = "Faild Fetching group details",
                 };
 
             }

@@ -23,4 +23,6 @@
     <ProjectReference Include="..\Huddle.Application\Huddle.Application.csproj" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="https://json.schemastore.org/bower.json" /></VisualStudio></ProjectExtensions>
+
 </Project>

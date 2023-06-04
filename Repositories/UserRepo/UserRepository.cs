@@ -40,12 +40,13 @@ namespace Repositories.UserRepo
                 };
             }
 
-            return new UserManagerResponse<string>
+            var userManagerResponse = new UserManagerResponse<string>()
             {
                 Message = "Consumer did not creat",
                 IsSuccess = false,
-                Errors = result.Errors.Select(e => e.Description)
             };
+            userManagerResponse.Errors.AddRange(result.Errors.Select(e => e.Description));
+            return userManagerResponse;
         }
 
         public async Task<UserManagerResponse<string>> RegisterEventPlanner(RegisterEventPlannerDTO registerEventPlannerDTO)
@@ -62,12 +63,14 @@ namespace Repositories.UserRepo
                     IsSuccess = true,
                 };
             }
-            return new UserManagerResponse<string>
+          
+            var userManagerResponse = new UserManagerResponse<string>()
             {
                 Message = "EventPlanner did not creat",
                 IsSuccess = false,
-                Errors = result.Errors.Select(e => e.Description)
             };
+            userManagerResponse.Errors.AddRange(result.Errors.Select(e => e.Description));
+            return userManagerResponse;
         }
 
         public async Task<UserManagerResponse<string>> RegisterBusinessOwner(RegisterBusinessOwnerDTO registerBusinessOwnerDTO)
@@ -84,12 +87,14 @@ namespace Repositories.UserRepo
                     IsSuccess = true,
                 };
             }
-            return new UserManagerResponse<string>
+           
+            var userManagerResponse = new UserManagerResponse<string>()
             {
                 Message = "BusinessOwner did not creat",
                 IsSuccess = false,
-                Errors = result.Errors.Select(e => e.Description)
             };
+            userManagerResponse.Errors.AddRange(result.Errors.Select(e => e.Description));
+            return userManagerResponse;
         }
         public async Task Save()
         {

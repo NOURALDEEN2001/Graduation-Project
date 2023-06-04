@@ -13,8 +13,8 @@ namespace Shared.GroupDTOs
     public class GroupDetailsDTO
     {
         public List<UserInfo> UserInfos { get; set; } = new List<UserInfo>();
-        //public List<DetailsResult> ActivePlaces { get; set; } = new List<DetailsResult>();
-        public List<string> ActivePlaces { get; set; } = new List<string>();
+        public bool? RequesterIsConfirmed { get; set; }
+        public List<PlaceInGroupDetails> ActivePlaces { get; set; } = new List<PlaceInGroupDetails>();
 
     }
 }

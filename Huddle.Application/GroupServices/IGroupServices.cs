@@ -12,6 +12,6 @@ namespace Huddle.Application.GroupServices
 {
     public interface IGroupServices
     {
-        public Task<UserManagerResponse<GroupDetailsDTO>> GetGroupDetails(Guid groupId);
+        public Task<UserManagerResponse<GroupDetailsDTO>> GetGroupDetails(Guid groupId, Guid consumerId);
     }
 }

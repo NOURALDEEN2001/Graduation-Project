@@ -8,7 +8,9 @@ namespace Shared.GroupDTOs
 {
     public class UserInfo
     {
+        public Guid UserId { get; set; }
         public string Fname { get; set; }
         public string Label { get; set; }
+        public bool? IsConfirmed { get; set; }
     }
 }

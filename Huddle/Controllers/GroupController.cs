@@ -63,9 +63,9 @@ namespace Huddle.Controllers
 
         [HttpPost]
         [Route("GetGroupDetails")]
-        public async Task<IActionResult> GetGroupDetails(Guid groupId)
+        public async Task<IActionResult> GetGroupDetails(Guid groupId,Guid consumerId)
         {
-            var response = await _groupServices.GetGroupDetails(groupId);
+            var response = await _groupServices.GetGroupDetails(groupId,consumerId);
             if (response.IsSuccess)
             {
                 return Ok(response.Obj);

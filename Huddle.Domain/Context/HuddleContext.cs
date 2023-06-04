@@ -67,6 +67,10 @@ namespace Huddle.Domain.Context
                 .HasKey(c => new { c.GroupId, c.ConsumerId });
             modelBuilder.Entity<ActivePlaceInGroup>()
                 .HasKey(a=> new {a.GroupId, a.PlaceId});
+            modelBuilder.Entity<UserContribution>()
+                .HasKey(u => new { u.ConsumerId, u.GroupId, u.PlaceId });
+            modelBuilder.Entity<UserConfirmation>()
+                .HasKey(u => new { u.ConsumerId, u.GroupId });
          
 
         }
@@ -85,6 +89,9 @@ namespace Huddle.Domain.Context
         public DbSet<ActivePlaceInGroup> ActivePlacesInGroups { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<GroupConsumer> GroupConsumers { get; set; }
+        public DbSet<UserConfirmation> UserConfirmations { get; set; }
+        public DbSet<UserContribution> UserContributions { get; set; }
+
 
     }
 }
