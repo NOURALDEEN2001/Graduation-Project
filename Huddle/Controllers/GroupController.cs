@@ -84,5 +84,17 @@ namespace Huddle.Controllers
             }
             return BadRequest(response.Message);
         }
+
+        [HttpPost]
+        [Route("ConfirmUserInGroup")]
+        public async Task<IActionResult> ConfirmUserInGroup(Guid groupId,Guid consumerId)
+        {
+            var response = await _groupRepository.ConfirmUserInGroup(groupId,consumerId);
+            if (response.IsSuccess)
+            {
+                return Ok(response.Message);
+            }
+            return BadRequest(response.Message);
+        }
     } 
 }

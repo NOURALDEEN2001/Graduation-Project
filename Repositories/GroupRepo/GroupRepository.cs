@@ -377,6 +377,7 @@ namespace Repositories.GroupRepo
                             if(groupToConfirm != null)
                                 groupToConfirm.Status = "Confirmed";
                             await _context.SaveChangesAsync();
+                            return userManagerResponse;
                         }
                     }
                     else
@@ -413,8 +414,20 @@ namespace Repositories.GroupRepo
                             if (groupToConfirm != null)
                                 groupToConfirm.Status = "Confirmed";
                             await _context.SaveChangesAsync();
+                            return userManagerResponse;
+                        }
+                        var membersCount = await _context.GroupConsumers.CountAsync(gc => gc.GroupId == groupId);
+                        if(membersCount == confirmedMembers)
+                        {
+                            var removeAllConfirmations = _context.UserConfirmations.Where(uc => uc.GroupId == groupId);
+                            _context.UserConfirmations.RemoveRange(removeAllConfirmations);
+                            var removeAllContributions = _context.UserContributions.Where(uc => uc.GroupId == groupId);
+                            _context.UserContributions.RemoveRange(removeAllContributions);
+                            await _context.SaveChangesAsync();
+                            return new UserManagerResponse<FinalDcisionPlace> { IsSuccess = false, Message = "Revote again" };
                         }
                     }
+                    return new UserManagerResponse<FinalDcisionPlace> { IsSuccess = false, Message = "In progress..." };
                 }
                 return new UserManagerResponse<FinalDcisionPlace> { IsSuccess = false, Message = "There is no places for this group" };
             }
@@ -470,9 +483,10 @@ namespace Repositories.GroupRepo
             }
             catch (Exception ex)
             {
-
                 return new UserManagerResponse<ConfirmedPlaceInGroup> { IsSuccess = false, Message = ex.Message };
             }
         }
+
+
     }
 }

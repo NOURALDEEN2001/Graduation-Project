@@ -71,9 +71,10 @@ namespace Repositories.UserRepo
             var result = await _userManager.CreateAsync(eventPlanner, registerEventPlannerDTO.Password);
             if (result.Succeeded)
             {
+                var registeredUser = await _context.Consumers.Where(c => c.UserName == eventPlanner.UserName).FirstOrDefaultAsync();
                 return new UserManagerResponse<string>
                 {
-                    Message = "EventPlanner created successfully!",
+                    Message = registeredUser.Id.ToString(),
                     IsSuccess = true,
                 };
             }
