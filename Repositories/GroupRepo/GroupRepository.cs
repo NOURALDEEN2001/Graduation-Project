@@ -318,6 +318,14 @@ namespace Repositories.GroupRepo
             };
             try
             {
+                UserConfirmation userConfirmation = new UserConfirmation()
+                {
+                    GroupId = groupId,
+                    ConsumerId = consumerId,
+                    IsConfirmed = true
+                };
+                _context.UserConfirmations.Add(userConfirmation);
+                _context.SaveChanges();
                 List<PlaceContributionCount> placeContributionCounts = new List<PlaceContributionCount>();
                 var activePlaces = await _context.ActivePlacesInGroups.Where(g => g.GroupId == groupId).ToListAsync();
                 if(activePlaces != null)
@@ -345,7 +353,7 @@ namespace Repositories.GroupRepo
                                 .Contains(groupId));
                     if (sortedList.Count() >= 2)
                     {
-                        if (confirmedInFirstPlaceScore - sortedList[2].Score > 2 * unConfirmedMembers)
+                        if (confirmedInFirstPlaceScore - sortedList[1].Score > 2 * unConfirmedMembers)
                         {
                             var userManagerResponse = new UserManagerResponse<FinalDcisionPlace>()
                             {
