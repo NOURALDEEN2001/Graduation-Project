@@ -55,8 +55,8 @@ namespace Repositories.HomeRepo
                     PlaceId = activePlaceInGroup.PlaceId,
                     HangOutDate = activePlaceInGroup.HangOutDate,
                 };
-                var checkExistence = await _context.ActivePlacesInGroups.FindAsync(activePlaceInGroup.PlaceId,activePlaceInGroup.GroupId);
-                if (checkExistence != null)
+                var checkExistence = await _context.ActivePlacesInGroups.Where(ap => ap.GroupId == activePlaceInGroup.GroupId && ap.PlaceId == activePlaceInGroup.PlaceId).FirstOrDefaultAsync();
+                if (checkExistence == null)
                 {
 
 
