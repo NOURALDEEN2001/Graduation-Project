@@ -13,6 +13,7 @@ using Repositories.UserRepo;
 using Repositories.HomeRepo;
 using Repositories.GroupRepo;
 using Huddle.Application.GroupServices;
+using Repositories.BusinessOwnerRepo;
 
 namespace Huddle.Extensions
 {
@@ -78,6 +79,7 @@ namespace Huddle.Extensions
             services.AddScoped<IHomeRepository, HomeRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<IGroupServices,GroupServices>();
+            services.AddScoped<IBusinessOwnerRepository, BusinessOwnerRepository>();
             var emailConfig = Configuration
                 .GetSection("EmailConfiguration")
                 .Get<EmailConfiguration>();
