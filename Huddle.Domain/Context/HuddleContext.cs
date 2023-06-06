@@ -71,7 +71,9 @@ namespace Huddle.Domain.Context
                 .HasKey(u => new { u.ConsumerId, u.GroupId, u.PlaceId });
             modelBuilder.Entity<UserConfirmation>()
                 .HasKey(u => new { u.ConsumerId, u.GroupId });
-         
+           
+
+
 
         }
 
@@ -91,6 +93,7 @@ namespace Huddle.Domain.Context
         public DbSet<GroupConsumer> GroupConsumers { get; set; }
         public DbSet<UserConfirmation> UserConfirmations { get; set; }
         public DbSet<UserContribution> UserContributions { get; set; }
+        public DbSet<ConfirmedPlaceInGroup> confirmedPlaceInGroups { get; set; }
 
 
     }

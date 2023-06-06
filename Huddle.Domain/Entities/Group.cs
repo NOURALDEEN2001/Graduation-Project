@@ -15,5 +15,6 @@ namespace Huddle.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int HashNumber { get; set; }
         public ICollection<Consumer> Consumers { get; set; } = new List<Consumer>();
+        public string? Status { get; set; }
     } 
 }

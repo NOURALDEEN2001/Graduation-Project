@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using GoogleApi.Entities.Maps.Common;
 using Huddle.Domain.Context;
 using Huddle.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using Shared;
 using Shared.GroupDTOs;
 using System;
@@ -53,21 +55,38 @@ namespace Repositories.HomeRepo
                     PlaceId = activePlaceInGroup.PlaceId,
                     HangOutDate = activePlaceInGroup.HangOutDate,
                 };
-                var response = await _context.ActivePlacesInGroups.AddAsync(mapedActivePlaceInGroup);
-                if (response == null)
+                var checkExistence = await _context.ActivePlacesInGroups.FindAsync(activePlaceInGroup.PlaceId,activePlaceInGroup.GroupId);
+                if (checkExistence != null)
+                {
+
+
+                    var response = await _context.ActivePlacesInGroups.AddAsync(mapedActivePlaceInGroup);
+                    if (response == null)
+                    {
+                        return new UserManagerResponse<string>
+                        {
+                            IsSuccess = false,
+                            Message = "failed To add to data base"
+                        };
+                    }
+                    var groupToReSetStatus = await _context.Groups.FirstOrDefaultAsync(g => g.Id == activePlaceInGroup.GroupId);
+                    groupToReSetStatus.Status = "Active";
+                    await _context.SaveChangesAsync();
+                    return new UserManagerResponse<string>
+                    {
+                        IsSuccess = true,
+                        Message = "Added Successfully"
+                    };
+                }
+                else
                 {
                     return new UserManagerResponse<string>
                     {
-                        IsSuccess = false,
-                        Message = "failed To add to data base"
+                        IsSuccess = true,
+                        Message = "The place you need to add is already added by another member in your group."
+
                     };
                 }
-                await _context.SaveChangesAsync();
-                return new UserManagerResponse<string>
-                {
-                    IsSuccess = true,
-                    Message = "Added Successfully"
-                };
             }
             catch (Exception ex)
             {
@@ -78,6 +97,19 @@ namespace Repositories.HomeRepo
                     Message = ex.Message
                 };
             }
+        }
+
+        public async Task ResetData()
+        {
+           var expieredPlaces = await _context.confirmedPlaceInGroups.Where(cp => cp.HangOutDate < DateTime.Now).ToListAsync();
+            _context.confirmedPlaceInGroups.RemoveRange(expieredPlaces);
+            foreach (var place in expieredPlaces)
+            {
+                var groupToReSetStatus = await _context.Groups.FirstOrDefaultAsync(g => g.Id == place.GroupId);
+                groupToReSetStatus.Status = null;
+                await _context.SaveChangesAsync();
+            }
+            await _context.SaveChangesAsync();
         }
     }
 }

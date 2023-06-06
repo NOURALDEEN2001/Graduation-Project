@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shared.GroupDTOs
 {
-    public class FinaldDcisionPlace
+    public class FinalDcisionPlace
     {
         public bool IsDone { get; set; }
         public string PlaceId { get; set; }

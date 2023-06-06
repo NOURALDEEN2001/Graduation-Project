@@ -1,4 +1,5 @@
-﻿using GoogleApi.Entities.Search.Common;
+﻿using GoogleApi.Entities.Maps.Common;
+using GoogleApi.Entities.Search.Common;
 using Huddle.Domain.Context;
 using Huddle.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -298,9 +299,9 @@ namespace Repositories.GroupRepo
             }
         }
 
-        public async Task<UserManagerResponse<FinaldDcisionPlace>> ConfirmUserInGroup(Guid groupId, Guid consumerId)
+        public async Task<UserManagerResponse<FinalDcisionPlace>> ConfirmUserInGroup(Guid groupId, Guid consumerId)
         {
-            if (consumerId.Equals(Guid.Empty) || groupId.Equals(Guid.Empty)) return new UserManagerResponse<FinaldDcisionPlace>
+            if (consumerId.Equals(Guid.Empty) || groupId.Equals(Guid.Empty)) return new UserManagerResponse<FinalDcisionPlace>
             {
                 IsSuccess = false,
                 Message = "group Id or consumer Id is null"
@@ -327,8 +328,8 @@ namespace Repositories.GroupRepo
                                            .CountAsync(u => u.GroupId == groupId);
                     var unConfirmedMembers = await _context.GroupConsumers.CountAsync(gc => gc.GroupId == groupId) - confirmedMembers;
 
-                    var confirmedInFirstPlaceScore = _context.UserConfirmations
-                                .Count(uc => _context.UserContributions
+                    var confirmedInFirstPlaceScore = await _context.UserConfirmations
+                                .CountAsync(uc => _context.UserContributions
                                 .Where(uc => uc.PlaceId == sortedList[0].PlaceId)
                                 .Select(uc => uc.GroupId)
                                 .Contains(groupId));
@@ -336,35 +337,132 @@ namespace Repositories.GroupRepo
                     {
                         if (confirmedInFirstPlaceScore - sortedList[2].Score > 2 * unConfirmedMembers)
                         {
-                            var userManagerResponse = new UserManagerResponse<FinaldDcisionPlace>()
+                            var userManagerResponse = new UserManagerResponse<FinalDcisionPlace>()
                             {
                                 IsSuccess = true,
                                 Message = "The hangout is decided",
                             };
-                            userManagerResponse.Obj.Add(new FinaldDcisionPlace { IsDone = true, PlaceId = sortedList[0].PlaceId });
-                            //var removeRemainingPlaces = _context.ActivePlacesInGroups.Where()
+                            userManagerResponse.Obj.Add(new FinalDcisionPlace { IsDone = true, PlaceId = sortedList[0].PlaceId });
+
+                            var inCount =await _context.UserContributions
+                                    .CountAsync(u => u.PlaceId == sortedList[0].PlaceId && u.GroupId == groupId && u.Contribution == 1);
+                            var outCount = await _context.UserContributions
+                                    .CountAsync(u => u.PlaceId == sortedList[0].PlaceId && u.GroupId == groupId && u.Contribution == 0);
+                            var hangOutDate = await _context.ActivePlacesInGroups.Where(ap => ap.GroupId == groupId && ap.PlaceId == sortedList[0].PlaceId).Select(p => p.HangOutDate).FirstOrDefaultAsync();
+                            _context.confirmedPlaceInGroups.Add(new ConfirmedPlaceInGroup
+                            {
+                                GroupId = groupId,
+                                PlaceId = sortedList[0].PlaceId,
+                                InCount = inCount,
+                                OutCount = outCount,
+                                HangOutDate = hangOutDate
+                            });
+                            var removeRemainingPlaces = _context.ActivePlacesInGroups.Where(ap => ap.GroupId == groupId);
+                            _context.ActivePlacesInGroups.RemoveRange(removeRemainingPlaces);
+                            var removeAllConfirmations = _context.UserConfirmations.Where(uc => uc.GroupId == groupId);
+                            _context.UserConfirmations.RemoveRange(removeAllConfirmations);
+                            var removeAllContributions = _context.UserContributions.Where(uc => uc.GroupId == groupId);
+                            _context.UserContributions.RemoveRange(removeAllContributions);
+                            var groupToConfirm = await _context.Groups.Where(g => g.Id == groupId).FirstOrDefaultAsync();
+                            if(groupToConfirm != null)
+                                groupToConfirm.Status = "Confirmed";
+                            await _context.SaveChangesAsync();
                         }
                     }
                     else
                     {
                         if (confirmedInFirstPlaceScore > 2 * unConfirmedMembers)
                         {
-                            var userManagerResponse = new UserManagerResponse<FinaldDcisionPlace>()
+                            var userManagerResponse = new UserManagerResponse<FinalDcisionPlace>()
                             {
                                 IsSuccess = true,
                                 Message = "The hangout is decided",
                             };
-                            userManagerResponse.Obj.Add(new FinaldDcisionPlace { IsDone = true, PlaceId = sortedList[0].PlaceId });
+                            userManagerResponse.Obj.Add(new FinalDcisionPlace { IsDone = true, PlaceId = sortedList[0].PlaceId });
+
+                            var inCount = await _context.UserContributions
+                                   .CountAsync(u => u.PlaceId == sortedList[0].PlaceId && u.GroupId == groupId && u.Contribution == 1);
+                            var outCount = await _context.UserContributions
+                                    .CountAsync(u => u.PlaceId == sortedList[0].PlaceId && u.GroupId == groupId && u.Contribution == 0);
+                            var hangOutDate = await _context.ActivePlacesInGroups.Where(ap => ap.GroupId == groupId && ap.PlaceId == sortedList[0].PlaceId).Select(p => p.HangOutDate).FirstOrDefaultAsync();
+                            _context.confirmedPlaceInGroups.Add(new ConfirmedPlaceInGroup
+                            {
+                                GroupId = groupId,
+                                PlaceId = sortedList[0].PlaceId,
+                                InCount = inCount,
+                                OutCount = outCount,
+                                HangOutDate = hangOutDate
+                            });
+                            var removeRemainingPlaces = _context.ActivePlacesInGroups.Where(ap => ap.GroupId == groupId);
+                            _context.ActivePlacesInGroups.RemoveRange(removeRemainingPlaces);
+                            var removeAllConfirmations = _context.UserConfirmations.Where(uc => uc.GroupId == groupId);
+                            _context.UserConfirmations.RemoveRange(removeAllConfirmations);
+                            var removeAllContributions = _context.UserContributions.Where(uc => uc.GroupId == groupId);
+                            _context.UserContributions.RemoveRange(removeAllContributions);
+                            var groupToConfirm = await _context.Groups.Where(g => g.Id == groupId).FirstOrDefaultAsync();
+                            if (groupToConfirm != null)
+                                groupToConfirm.Status = "Confirmed";
+                            await _context.SaveChangesAsync();
                         }
                     }
                 }
-                return new UserManagerResponse<FinaldDcisionPlace> { IsSuccess = false, Message = "There is no places for this group" };
+                return new UserManagerResponse<FinalDcisionPlace> { IsSuccess = false, Message = "There is no places for this group" };
             }
             catch (Exception ex)
             {
-                return new UserManagerResponse<FinaldDcisionPlace> { IsSuccess = false, Message = ex.Message };
+                return new UserManagerResponse<FinalDcisionPlace> { IsSuccess = false, Message = ex.Message };
             }
 
+        }
+
+        public async Task<UserManagerResponse<string>> GetGroupStatus(Guid groupId)
+        {
+            if (groupId.Equals(Guid.Empty))
+            {
+                return new UserManagerResponse<string> { IsSuccess = false, Message = "The provided Group Id is empty" };
+            }
+            try
+            {
+                string? response = await _context.Groups.Where(g => g.Id == groupId).Select(g => g.Status).FirstOrDefaultAsync();
+                var userManagerResponse = new UserManagerResponse<string>
+                {
+                    IsSuccess = true,
+                    Message = "Success",
+                };
+                userManagerResponse.Obj.Add(response);
+                return userManagerResponse;
+            }
+            catch (Exception ex)
+            {
+
+                return new UserManagerResponse<string> { IsSuccess = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<UserManagerResponse<ConfirmedPlaceInGroup>> GetConfirmedGroup(Guid groupId)
+        {
+            if (groupId.Equals(Guid.Empty))
+            {
+                return new UserManagerResponse<ConfirmedPlaceInGroup> { IsSuccess = false, Message = "The provided Group Id is empty" };
+            }
+            try
+            {
+                var response = await _context.confirmedPlaceInGroups.Where(cg => cg.GroupId == groupId).FirstOrDefaultAsync();
+                if (response == null)
+                    return new UserManagerResponse<ConfirmedPlaceInGroup> { IsSuccess = false, Message = "Null response from database" };
+                var userManagerResponse = new UserManagerResponse<ConfirmedPlaceInGroup>
+                {
+                    IsSuccess = true,
+                    Message = "Success",
+                };
+                userManagerResponse.Obj.Add(response);
+                return userManagerResponse;
+            }
+            catch (Exception ex)
+            {
+
+                return new UserManagerResponse<ConfirmedPlaceInGroup> { IsSuccess = false, Message = ex.Message };
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using Huddle.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Huddle.Domain.Migrations
 {
     [DbContext(typeof(HuddleContext))]
-    partial class HuddleContextModelSnapshot : ModelSnapshot
+    [Migration("20230605230913_addDateToTable")]
+    partial class addDateToTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,10 +106,6 @@ namespace Huddle.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("About")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ContactNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -118,10 +117,6 @@ namespace Huddle.Domain.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

@@ -12,7 +12,7 @@ builder.Services.ConfigureAutoMapper();
 builder.Services.ConfigureAppServices(builder.Configuration);
 builder.Services.ConfigureGoogleMapsAPIs();
 builder.Services.AddControllers();
-//builder.WebHost.UseUrls("http://192.168.0.182:7167");
+//builder.WebHost.UseUrls("https://192.168.75.86:7167", "https://localhost:7167");
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

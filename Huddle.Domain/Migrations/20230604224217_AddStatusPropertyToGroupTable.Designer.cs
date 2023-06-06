@@ -4,6 +4,7 @@ using Huddle.Domain.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Huddle.Domain.Migrations
 {
     [DbContext(typeof(HuddleContext))]
-    partial class HuddleContextModelSnapshot : ModelSnapshot
+    [Migration("20230604224217_AddStatusPropertyToGroupTable")]
+    partial class AddStatusPropertyToGroupTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,30 +61,6 @@ namespace Huddle.Domain.Migrations
                     b.ToTable("Activities");
                 });
 
-            modelBuilder.Entity("Huddle.Domain.Entities.ConfirmedPlaceInGroup", b =>
-                {
-                    b.Property<Guid>("GroupId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("HangOutDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("InCount")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OutCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PlaceId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("GroupId");
-
-                    b.ToTable("confirmedPlaceInGroups");
-                });
-
             modelBuilder.Entity("Huddle.Domain.Entities.ConsumerActivity", b =>
                 {
                     b.Property<Guid>("ActivityId")
@@ -103,10 +82,6 @@ namespace Huddle.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("About")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ContactNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -118,10 +93,6 @@ namespace Huddle.Domain.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

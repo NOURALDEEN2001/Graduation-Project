@@ -13,5 +13,6 @@ namespace Repositories.HomeRepo
     {
         public List<string> GetUserPreferences(Guid userId);
         public Task<UserManagerResponse<string>> AddPlaceToGroup(ActivePlacceInGroupDTO activePlaceInGroup);
+        public Task ResetData();
     }
 }

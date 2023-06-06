@@ -1,4 +1,5 @@
 ﻿using Azure;
+using GoogleApi.Entities.Maps.Common;
 using GoogleApi.Entities.Places.Details.Response;
 using Huddle.Application.GoogleMaps;
 using Huddle.Domain.Entities;
@@ -34,14 +35,13 @@ namespace Huddle.Application.GroupServices
                 GroupDetailsDTO groupDetails = new GroupDetailsDTO();
                 var userManagerResponse = new UserManagerResponse<GroupDetailsDTO>();
 
-
-                if (groupMembers.IsSuccess && activePlaces.IsSuccess)
+                if (groupMembers.IsSuccess)
                 {
                     foreach (var consumer in groupMembers.Obj)
                     {
                         var isConfirmedConsumer = await _groupRepository.GetIfConfirmed(groupId, consumer.Id);
                         bool? isConfirmedConsumerResult;
-                        if(isConfirmedConsumer.IsSuccess)
+                        if (isConfirmedConsumer.IsSuccess)
                             isConfirmedConsumerResult = isConfirmedConsumer.Obj[0].IsConfirmed;
                         else
                             isConfirmedConsumerResult = null;
@@ -54,7 +54,15 @@ namespace Huddle.Application.GroupServices
                             IsConfirmed = isConfirmedConsumerResult,
                         });
                     }
+                }
+                else return new UserManagerResponse<GroupDetailsDTO>
+                {
+                    IsSuccess = false,
+                    Message = "There is no members in this group",
+                };
 
+                if (activePlaces.IsSuccess)
+                {
                     foreach (var place in activePlaces.Obj)
                     {
                         var placeDetails = await _googleMapsApiService.GetPlaceDetails(place.PlaceId);
@@ -101,6 +109,29 @@ namespace Huddle.Application.GroupServices
                     userManagerResponse.Message = "Success";
                     userManagerResponse.Obj.Add(groupDetails);
                     return userManagerResponse;
+                }
+                var groupStatus = await _groupRepository.GetGroupStatus(groupId);
+                if (groupStatus.IsSuccess)
+                {
+                    if (groupStatus.Obj[0] == "Confirmed")
+                    {
+                        var response = await _groupRepository.GetConfirmedGroup(groupId);
+                        if (response.IsSuccess)
+                        {
+                            var placeDetails = await _googleMapsApiService.GetPlaceDetails(response.Obj[0].PlaceId);
+                            PlaceInGroupDetails placeInGroupDetails = new PlaceInGroupDetails();
+                            placeInGroupDetails.PlaceDetails = placeDetails.Obj[0];
+                            placeInGroupDetails.InCount = response.Obj[0].InCount;
+                            placeInGroupDetails.OutCount = response.Obj[0].OutCount;
+                            placeInGroupDetails.IsIn = null;
+                            groupDetails.ActivePlaces.Add(placeInGroupDetails);
+
+                            userManagerResponse.IsSuccess = true;
+                            userManagerResponse.Message = "Success";
+                            userManagerResponse.Obj.Add(groupDetails);
+                            return userManagerResponse;
+                        }
+                    }
                 }
                 return new UserManagerResponse<GroupDetailsDTO>
                 {

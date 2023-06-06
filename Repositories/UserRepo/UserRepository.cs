@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Huddle.Domain.Entities;
 using Huddle.Domain.Context;
 using Huddle.Domain.RegistrationDTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repositories.UserRepo
 {
@@ -28,25 +29,38 @@ namespace Repositories.UserRepo
         {
             if (consumerDTO == null)
                 throw new NullReferenceException("Consumer Registeration Model is Null");
-
-            var consumer = _mapper.Map<Consumer>(consumerDTO);
-            var result = await _userManager.CreateAsync(consumer, consumerDTO.Password);
-            if (result.Succeeded)
+            try
             {
+                var consumer = _mapper.Map<Consumer>(consumerDTO);
+                var result = await _userManager.CreateAsync(consumer, consumerDTO.Password);
+                if (result.Succeeded)
+                {
+                    var registeredUser = await _context.Consumers.Where(c=> c.UserName == consumer.UserName).FirstOrDefaultAsync();
+                    return new UserManagerResponse<string>
+                    {
+                        Message = registeredUser.Id.ToString(),
+                        IsSuccess = true,
+                    };
+                }
+
+                var userManagerResponse = new UserManagerResponse<string>()
+                {
+                    Message = "Consumer did not creat",
+                    IsSuccess = false,
+                };
+                userManagerResponse.Errors.AddRange(result.Errors.Select(e => e.Description));
+                return userManagerResponse;
+            }
+            catch (Exception ex)
+            {
+
                 return new UserManagerResponse<string>
                 {
-                    Message = "Consumer created successfully!",
-                    IsSuccess = true,
+                    IsSuccess = false,
+                    Message = ex.Message,
                 };
             }
-
-            var userManagerResponse = new UserManagerResponse<string>()
-            {
-                Message = "Consumer did not creat",
-                IsSuccess = false,
-            };
-            userManagerResponse.Errors.AddRange(result.Errors.Select(e => e.Description));
-            return userManagerResponse;
+           
         }
 
         public async Task<UserManagerResponse<string>> RegisterEventPlanner(RegisterEventPlannerDTO registerEventPlannerDTO)

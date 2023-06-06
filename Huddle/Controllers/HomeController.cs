@@ -46,6 +46,14 @@ namespace Huddle.Controllers
 
         }
 
-        
+        [HttpGet]
+        [Route("ResetData")]
+        public async Task<IActionResult> ResetData()
+        {
+            await _homeRepository.ResetData();
+            return Ok();
+        }
+
+
     }
 }

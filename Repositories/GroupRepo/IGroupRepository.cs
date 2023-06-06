@@ -20,6 +20,8 @@ namespace Repositories.GroupRepo
         public Task<UserManagerResponse<UserConfirmation>> GetIfConfirmed(Guid groupId,Guid consumerId);
         public Task<UserManagerResponse<int>> GetContributionCount(Guid groupId, string placeId, int inOrOut);
         public Task<UserManagerResponse<int?>> CheckIsIn(Guid groupId,string placeId,Guid consumerId);
-        public Task<UserManagerResponse<FinaldDcisionPlace>> ConfirmUserInGroup(Guid groupId,Guid consumerId);
+        public Task<UserManagerResponse<FinalDcisionPlace>> ConfirmUserInGroup(Guid groupId,Guid consumerId);
+        public Task<UserManagerResponse<string>> GetGroupStatus(Guid groupId);
+        public Task<UserManagerResponse<ConfirmedPlaceInGroup>> GetConfirmedGroup(Guid groupId);
     }
 }
