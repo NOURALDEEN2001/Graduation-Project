@@ -122,10 +122,20 @@ namespace Repositories.GroupRepo
             
         }
 
-        public async Task<List<Group>> GetConsumerGroups(Guid userId)
+        public async Task<List<GetUserGroupsDTO>> GetConsumerGroups(Guid userId)
         {
             var response = await _context.Groups.FromSql($"SELECT * FROM Groups  where Groups.Id in (SELECT GroupId FROM GroupConsumers WHERE ConsumerId = {userId});").ToListAsync();
-            return response;
+            List<GetUserGroupsDTO> GroupsToReturn = new List<GetUserGroupsDTO>();
+            foreach(var group in response)
+            {
+                var tempGroupsToReturn = new GetUserGroupsDTO();
+                var status = await GetIfConfirmed(group.Id, userId);
+                if (status.IsSuccess) tempGroupsToReturn.IsConfirmed = status.Obj[0].IsConfirmed;
+                else tempGroupsToReturn.IsConfirmed = null;
+                tempGroupsToReturn.Group = group;
+                GroupsToReturn.Add(tempGroupsToReturn);
+            }
+            return GroupsToReturn;
         }
 
         public async Task<UserManagerResponse<Consumer>> GetGroupMembers(Guid groupId)
